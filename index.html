@@ -98,6 +98,20 @@ document.addEventListener("keydown",e=>{
 btnLeft.addEventListener("click",()=>setLane(lane-1));
 btnRight.addEventListener("click",()=>setLane(lane+1));
 
+/* ✅ Swipe control */
+let touchStartX=null;
+road.addEventListener("touchstart",e=>{
+  touchStartX=e.touches[0].clientX;
+});
+road.addEventListener("touchend",e=>{
+  if(touchStartX===null) return;
+  let touchEndX=e.changedTouches[0].clientX;
+  let diff=touchEndX-touchStartX;
+  if(diff<-30){ setLane(lane-1); } // swipe left
+  else if(diff>30){ setLane(lane+1); } // swipe right
+  touchStartX=null;
+});
+
 function spawnObstacle(){
   const ob=document.createElement("div");
   ob.className="obstacle";
