@@ -24,10 +24,10 @@
   #road::before { left:33%; }
   #road::after { left:66%; }
 
-  /* real car image (use raw GitHub URL to avoid path issues) */
+  /* real car image */
   #car {
     width:60px; height:100px;
-    position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+    position:absolute; bottom:10px;
     background:url('https://raw.githubusercontent.com/devenramanuj/test/main/car.png') no-repeat center/contain;
   }
 
@@ -39,9 +39,12 @@
     position:absolute; top:8px; left:8px; font-size:clamp(14px,3vw,18px);
   }
   #restartBtn {
-    position:absolute; top:8px; right:8px;
-    padding:6px 12px; background:#444; color:#fff; border:none; border-radius:6px;
-    cursor:pointer; font-size:clamp(12px,3vw,16px);
+    margin-top:8px;
+    padding:8px 14px;
+    background:#444; color:#fff;
+    border:none; border-radius:6px;
+    cursor:pointer;
+    font-size:clamp(14px,3vw,18px);
   }
   #controls { display:flex; justify-content:center; gap:12px; width:100%; }
   .btn { flex:1; padding:14px; background:#444; color:#fff; border:none; border-radius:10px;
@@ -54,8 +57,9 @@
   <div id="road">
     <div id="car"></div>
     <div id="score">સ્કોર: 0</div>
-    <button id="restartBtn">🔄 ફરી શરૂ</button>
   </div>
+  <!-- restart button road div બહાર -->
+  <button id="restartBtn">🔄 ફરી શરૂ</button>
   <div id="controls">
     <button class="btn" id="btnLeft">⬅️ ડાબે</button>
     <button class="btn" id="btnRight">જમણે ➡️</button>
@@ -85,7 +89,7 @@ bgMusic.volume=0.3; bgMusic.play();
 function setLane(n){
   lane=Math.max(0,Math.min(2,n));
   const laneWidth=road.clientWidth/3;
-  car.style.left=(laneWidth*lane+laneWidth/2-car.clientWidth/2)+"px";
+  car.style.left=(laneWidth*lane + laneWidth/2 - car.clientWidth/2) + "px";
 }
 document.addEventListener("keydown",e=>{
   if(e.key==="ArrowLeft") setLane(lane-1);
@@ -99,7 +103,7 @@ function spawnObstacle(){
   ob.className="obstacle";
   const laneIndex=Math.floor(Math.random()*3);
   const laneWidth=road.clientWidth/3;
-  ob.style.left=(laneWidth*laneIndex+laneWidth/2-ob.clientWidth/2)+"px";
+  ob.style.left=(laneWidth*laneIndex + laneWidth/2 - ob.clientWidth/2) + "px";
   road.appendChild(ob);
   obstacles.push(ob);
 }
