@@ -1,80 +1,72 @@
 <!DOCTYPE html>
 <html lang="gu">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>બોલતું–સાંભળતું કેલ્ક્યુલેટર</title>
   <style>
-    :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --accent: #22c55e;
-      --accent2: #38bdf8;
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --danger: #ef4444;
+    :root{
+      --bg1:#0f172a; --bg2:#1f2937; --panel:#111827;
+      --text:#f1f5f9; --muted:#9ca3af;
+      --accent:#22c55e; --accent2:#38bdf8; --danger:#ef4444;
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; background: linear-gradient(135deg, #0f172a, #1f2937);
-      color: var(--text); font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans Gujarati, sans-serif;
-      display: grid; place-items: center; min-height: 100vh; padding: 16px;
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui, -apple-system, Segoe UI, Roboto, Noto Sans Gujarati, sans-serif;
+      background:linear-gradient(135deg,var(--bg1),var(--bg2));
+      color:var(--text); min-height:100vh; display:flex; align-items:center; justify-content:center; padding:16px;
     }
-    .app {
-      width: 100%; max-width: 420px; background: var(--panel);
-      border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,.35); overflow: hidden;
-      border: 1px solid rgba(255,255,255,.06);
+    .app{
+      width:100%; max-width:460px; background:var(--panel);
+      border-radius:20px; box-shadow:0 12px 36px rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.08); overflow:hidden;
     }
-    header {
-      padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
-      background: rgba(255,255,255,.04);
+    header{
+      background:rgba(255,255,255,.05); padding:14px 16px; display:flex; align-items:center; justify-content:space-between;
     }
-    header h1 { font-size: 18px; margin: 0; letter-spacing: .2px; }
-    .controls { display: flex; gap: 8px; }
-    .btn {
-      border: none; border-radius: 10px; padding: 10px 12px; color: var(--text);
-      background: rgba(255,255,255,.08); cursor: pointer; transition: .2s;
-      display: inline-flex; align-items: center; gap: 8px; font-weight: 600;
+    header h1{margin:0; font-size:18px; letter-spacing:.2px}
+    .btn{
+      border:none; border-radius:10px; padding:8px 12px; font-weight:700; cursor:pointer; margin-left:8px;
+      display:inline-flex; align-items:center; gap:6px;
     }
-    .btn:hover { background: rgba(255,255,255,.12); }
-    .btn.primary { background: var(--accent); color: #062e0f; }
-    .btn.info { background: var(--accent2); color: #062e2e; }
-    .btn.danger { background: var(--danger); color: #3b0a0a; }
-    .status { font-size: 12px; color: var(--muted); margin-left: 6px; }
-    .display {
-      padding: 16px; display: grid; gap: 8px; background: rgba(255,255,255,.03);
-      border-top: 1px solid rgba(255,255,255,.06);
+    .btn.info{background:var(--accent2); color:#062e2e}
+    .btn.primary{background:var(--accent); color:#062e0f}
+    .btn.danger{background:var(--danger); color:#3b0a0a}
+    .display{
+      padding:16px; background:rgba(255,255,255,.03); border-top:1px solid rgba(255,255,255,.06);
+      display:grid; gap:10px;
     }
-    .expr, .result {
-      width: 100%; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,.08);
-      background: #0b1220; color: var(--text); font-size: 18px;
+    .expr,.result{
+      width:100%; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+      background:#0b1220; color:var(--text); font-size:18px;
     }
-    .result { font-size: 22px; font-weight: 700; background: #0a1628; }
-    .grid {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 16px;
+    .expr::placeholder{color:#94a3b8}
+    .result{font-size:22px; font-weight:800; background:#0a1628}
+    .status{font-size:12px; color:var(--muted)}
+    .grid{
+      display:grid; grid-template-columns:repeat(4,1fr); gap:10px; padding:16px;
     }
-    .key {
-      padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,.08);
-      background: rgba(255,255,255,.06); color: var(--text); font-size: 18px; font-weight: 700;
-      text-align: center; cursor: pointer; transition: .15s;
-      user-select: none;
+    .key{
+      padding:16px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.06); text-align:center; font-size:18px; font-weight:800; cursor:pointer; transition:.15s;
+      user-select:none;
     }
-    .key:active { transform: scale(.98); }
-    .key.op { background: rgba(56,189,248,.18); border-color: rgba(56,189,248,.35); }
-    .key.eq { background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.35); }
-    .key.fn { background: rgba(239,68,68,.18); border-color: rgba(239,68,68,.35); }
-    footer {
-      padding: 10px 16px; font-size: 12px; color: var(--muted);
-      border-top: 1px solid rgba(255,255,255,.06);
+    .key:active{transform:scale(.98)}
+    .key.op{background:rgba(56,189,248,.18); border-color:rgba(56,189,248,.35)}
+    .key.eq{background:rgba(34,197,94,.18); border-color:rgba(34,197,94,.35)}
+    .key.fn{background:rgba(239,68,68,.18); border-color:rgba(239,68,68,.35)}
+    footer{
+      padding:12px 16px; font-size:12px; color:var(--muted); background:rgba(255,255,255,.05);
+      border-top:1px solid rgba(255,255,255,.06);
     }
-    .sr-tip { margin-top: 6px; color: var(--muted); }
+    .tip{color:#9ca3af; font-size:12px}
   </style>
 </head>
 <body>
   <div class="app">
     <header>
       <h1>બોલતું–સાંભળતું કેલ્ક્યુલેટર</h1>
-      <div class="controls">
+      <div>
         <button id="listenBtn" class="btn info">🎙️ Listen</button>
         <button id="speakToggle" class="btn primary">🔊 Speak: On</button>
         <button id="clearAll" class="btn danger">AC</button>
@@ -82,34 +74,33 @@
     </header>
 
     <div class="display">
-      <input id="expr" class="expr" placeholder="અહીં લખો અથવા બોલો… (e.g., 12+7*3)" />
+      <input id="expr" class="expr" placeholder="અહીં લખો અથવા બોલો… (e.g., 12+7*3, 100000 ના 10 ટકા લેખે 1 વર્ષ)" />
       <div id="result" class="result">Result: —</div>
       <div id="status" class="status">Speech: ready</div>
-      <div class="sr-tip">Tip: બોલો “5 plus 3”, “7 into 4”, “12 divide by 3”, “9 minus 2”.</div>
+      <div class="tip">Gujarati phrases: “પાંચ વત્તા બે”, “દસ બાદબાકી ત્રણ”, “ચક્રવૃદ્ધિ વ્યાજ 2 વર્ષ”…</div>
     </div>
 
     <div class="grid" id="keys">
-      <!-- Row 1 -->
       <div class="key fn" data-k="AC">AC</div>
       <div class="key fn" data-k="DEL">⌫</div>
       <div class="key fn" data-k="(">(</div>
       <div class="key fn" data-k=")">)</div>
-      <!-- Row 2 -->
+
       <div class="key" data-k="7">7</div>
       <div class="key" data-k="8">8</div>
       <div class="key" data-k="9">9</div>
       <div class="key op" data-k="/">÷</div>
-      <!-- Row 3 -->
+
       <div class="key" data-k="4">4</div>
       <div class="key" data-k="5">5</div>
       <div class="key" data-k="6">6</div>
       <div class="key op" data-k="*">×</div>
-      <!-- Row 4 -->
+
       <div class="key" data-k="1">1</div>
       <div class="key" data-k="2">2</div>
       <div class="key" data-k="3">3</div>
       <div class="key op" data-k="-">−</div>
-      <!-- Row 5 -->
+
       <div class="key" data-k="0">0</div>
       <div class="key" data-k=".">.</div>
       <div class="key eq" data-k="=">=</div>
@@ -117,196 +108,225 @@
     </div>
 
     <footer>
-      Voice math: “two hundred thirty five plus forty six”, “square root of 81”, “10 percent of 250”.
+      Voice math: “100000 ના 10 ટકા લેખે 1 વર્ષ”, “100000 ના 10 ટકા ચક્રવૃદ્ધિ વ્યાજ 2 વર્ષ”, “વર્ગમૂળ 81”, “2 ઘાત 3”.
     </footer>
   </div>
 
-  <script>
-    // Elements
-    const exprEl = document.getElementById('expr');
-    const resultEl = document.getElementById('result');
-    const statusEl = document.getElementById('status');
-    const listenBtn = document.getElementById('listenBtn');
-    const speakToggle = document.getElementById('speakToggle');
-    const clearAllBtn = document.getElementById('clearAll');
-    const keys = document.getElementById('keys');
+<script>
+  // Elements
+  const exprEl = document.getElementById('expr');
+  const resultEl = document.getElementById('result');
+  const statusEl = document.getElementById('status');
+  const listenBtn = document.getElementById('listenBtn');
+  const speakToggle = document.getElementById('speakToggle');
+  const clearAllBtn = document.getElementById('clearAll');
+  const keys = document.getElementById('keys');
 
-    // State
-    let speakOn = true;
-    let recognizing = false;
+  // State
+  let speakOn = true;
+  let recognizing = false;
 
-    // Safe evaluator for basic math
-    function safeEval(expression) {
-      // Allow digits, operators, parentheses, decimal points, spaces
-      const allowed = /^[0-9+\-*/().\s%]*$/;
-      if (!allowed.test(expression)) throw new Error('Invalid characters');
-      // Replace percentage: "a % b" -> "a * (b/100)"
-      const percentFixed = expression.replace(/(\d+(?:\.\d+)?)\s*%\s*(\d+(?:\.\d+)?)/g, (_, a, b) => `${a}*(${b}/100)`);
-      // Also support "x%" -> "(x/100)"
-      const percentSolo = percentFixed.replace(/(\d+(?:\.\d+)?)\s*%/g, (_, x) => `(${x}/100)`);
-      // Evaluate
-      // eslint-disable-next-line no-new-func
-      return Function('return (' + percentSolo + ')')();
-    }
+  // Safe evaluator for math-only expressions
+  function safeEval(expression) {
+    const allowed = /^[0-9+\-*/().\s%a-zA-Z,_]*$/;
+    if (!allowed.test(expression)) throw new Error('Invalid characters');
+    // Percent handling:
+    // "a % b" -> "a * (b/100)"
+    let exp = expression.replace(/(\d+(?:\.\d+)?)\s*%\s*(\d+(?:\.\d+)?)/g, (_, a, b) => `${a}*(${b}/100)`);
+    // "x%" -> "(x/100)"
+    exp = exp.replace(/(\d+(?:\.\d+)?)\s*%/g, (_, x) => `(${x}/100)`);
+    // eslint-disable-next-line no-new-func
+    return Function('return (' + exp + ')')();
+  }
 
-    function updateResult() {
-      const exp = exprEl.value.trim();
-      if (!exp) { resultEl.textContent = 'Result: —'; return; }
-      try {
-        const val = safeEval(exp);
-        const out = Number.isFinite(val) ? val : 'Error';
-        resultEl.textContent = 'Result: ' + out;
-        if (speakOn && Number.isFinite(val)) speak(`પરિણામ: ${out}`);
-      } catch (e) {
-        resultEl.textContent = 'Result: Error';
-      }
-    }
-
-    // Keyboard grid
-    keys.addEventListener('click', (e) => {
-      const k = e.target.dataset.k;
-      if (!k) return;
-      if (k === 'AC') { exprEl.value = ''; updateResult(); return; }
-      if (k === 'DEL') { exprEl.value = exprEl.value.slice(0, -1); updateResult(); return; }
-      if (k === '=') { updateResult(); return; }
-      exprEl.value += k;
-      updateResult();
-    });
-
-    clearAllBtn.addEventListener('click', () => {
-      exprEl.value = '';
-      updateResult();
-    });
-
-    exprEl.addEventListener('input', updateResult);
-
-    // Speech synthesis
-    function speak(text) {
-      if (!window.speechSynthesis) return;
-      const utter = new SpeechSynthesisUtterance(text);
-      // Prefer Gujarati if available, else English
-      const voices = speechSynthesis.getVoices();
-      const guVoice = voices.find(v => /gu/i.test(v.lang));
-      const enVoice = voices.find(v => /en/i.test(v.lang));
-      utter.voice = guVoice || enVoice || null;
-      utter.rate = 1.0;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(utter);
-    }
-
-    speakToggle.addEventListener('click', () => {
-      speakOn = !speakOn;
-      speakToggle.textContent = speakOn ? '🔊 Speak: On' : '🔇 Speak: Off';
-      if (speakOn) speak('વોઇસ ચાલુ છે');
-    });
-
-    // Speech recognition (Web Speech API)
-    let SR = null;
+  function updateResult() {
+    const exp = exprEl.value.trim();
+    if (!exp) { resultEl.textContent = 'Result: —'; return; }
     try {
-      const SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SRClass) {
-        SR = new SRClass();
-        SR.lang = 'en-IN'; // mixed Gujarati/English commands still parsed
-        SR.interimResults = false;
-        SR.maxAlternatives = 1;
-      }
-    } catch (e) { /* ignore */ }
-
-    function normalizeVoiceMath(text) {
-      // Lowercase and trim
-      let t = text.toLowerCase().trim();
-
-      // Gujarati keywords to operators
-      t = t
-        .replace(/ઉમેરો|જોડો|પ્લસ/g, '+')
-        .replace(/બાદબાકી|ઘટાડો|માઇનસ/g, '-')
-        .replace(/ગુણાકાર|ગુણો|ઇન્ટુ|into/g, '*')
-        .replace(/ભાગાકાર|ભાગો|ડિવાઇડ|divide/g, '/')
-        .replace(/ટકાવારી|percent/g, '%');
-
-      // English words to operators
-      t = t
-        .replace(/\bplus\b/g, '+')
-        .replace(/\bminus\b/g, '-')
-        .replace(/\btimes\b|\binto\b|\bmultiply\b/g, '*')
-        .replace(/\bdivide\b|\bdivided by\b/g, '/')
-        .replace(/\bpercent\b/g, '%');
-
-      // Square root
-      t = t.replace(/square root of|વર્ગમૂળ/g, 'sqrt ');
-      // Power
-      t = t.replace(/\bpower of\b|\bto the power\b|ઘાત/g, '^');
-
-      // Words to numbers (basic)
-      const words = {
-        zero: '0', one: '1', two: '2', three: '3', four: '4', five: '5',
-        six: '6', seven: '7', eight: '8', nine: '9', ten: '10',
-        eleven: '11', twelve: '12', thirteen: '13', fourteen: '14',
-        fifteen: '15', sixteen: '16', seventeen: '17', eighteen: '18', nineteen: '19',
-        twenty: '20', thirty: '30', forty: '40', fifty: '50', sixty: '60',
-        seventy: '70', eighty: '80', ninety: '90', hundred: '100'
-      };
-      Object.entries(words).forEach(([w, n]) => {
-        t = t.replace(new RegExp('\\b' + w + '\\b', 'g'), n);
-      });
-
-      // Handle "sqrt 81" -> "Math.sqrt(81)"
-      t = t.replace(/sqrt\s+(\d+(\.\d+)?)/g, (_, num) => `Math.sqrt(${num})`);
-
-      // Handle power: "2 ^ 3" -> "Math.pow(2,3)"
-      t = t.replace(/(\d+(?:\.\d+)?)\s*\^\s*(\d+(?:\.\d+)?)/g, (_, a, b) => `Math.pow(${a},${b})`);
-
-      // Remove filler words
-      t = t.replace(/\bof\b|\bby\b|\bનો\b|\bની\b|\bના\b/g, ' ');
-
-      // Keep only safe characters
-      t = t.replace(/[^0-9+\-*/().\s%a-z]/g, '');
-      return t;
+      const val = safeEval(exp);
+      const out = Number.isFinite(val) ? val : 'Error';
+      resultEl.textContent = 'Result: ' + out;
+      if (speakOn && Number.isFinite(val)) speak(`પરિણામ: ${out}`);
+    } catch (e) {
+      resultEl.textContent = 'Result: Error';
     }
+  }
 
-    function startListening() {
-      if (!SR) {
-        statusEl.textContent = 'Speech: not supported on this browser';
-        return;
-      }
-      if (recognizing) return;
-      recognizing = true;
-      statusEl.textContent = 'Listening… બોલો: “5 plus 3”';
-      SR.start();
+  // Keyboard grid
+  keys.addEventListener('click', (e) => {
+    const k = e.target.dataset.k;
+    if (!k) return;
+    if (k === 'AC') { exprEl.value = ''; updateResult(); return; }
+    if (k === 'DEL') { exprEl.value = exprEl.value.slice(0, -1); updateResult(); return; }
+    if (k === '=') { updateResult(); return; }
+    exprEl.value += k;
+    updateResult();
+  });
+
+  clearAllBtn.addEventListener('click', () => {
+    exprEl.value = '';
+    updateResult();
+  });
+
+  exprEl.addEventListener('input', updateResult);
+
+  // Speech synthesis
+  function speak(text) {
+    if (!window.speechSynthesis) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    const voices = speechSynthesis.getVoices();
+    const guVoice = voices.find(v => /gu/i.test(v.lang));
+    const enVoice = voices.find(v => /en/i.test(v.lang));
+    utter.voice = guVoice || enVoice || null;
+    utter.rate = 1.0;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utter);
+  }
+
+  speakToggle.addEventListener('click', () => {
+    speakOn = !speakOn;
+    speakToggle.textContent = speakOn ? '🔊 Speak: On' : '🔇 Speak: Off';
+    if (speakOn) speak('વોઇસ ચાલુ છે');
+  });
+
+  // Speech recognition
+  let SR = null;
+  try {
+    const SRClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (SRClass) {
+      SR = new SRClass();
+      SR.lang = 'gu-IN'; // prefer Gujarati; mixed Gujarati/English still parsed
+      SR.interimResults = false;
+      SR.maxAlternatives = 1;
     }
+  } catch (e) { /* ignore */ }
 
-    listenBtn.addEventListener('click', () => {
-      if (recognizing) {
-        SR.stop();
-        recognizing = false;
-        statusEl.textContent = 'Speech: stopped';
-      } else {
-        startListening();
-      }
+  function normalizeVoiceMath(text) {
+    let t = (text || '').toLowerCase().trim();
+
+    // Gujarati digits ૦-૯ → 0-9
+    const guDigits = { '૦':'0','૧':'1','૨':'2','૩':'3','૪':'4','૫':'5','૬':'6','૭':'7','૮':'8','૯':'9' };
+    t = t.replace(/[૦-૯]/g, d => guDigits[d] || d);
+
+    // Remove filler words
+    t = t.replace(/\b(of|by|and)\b|નો|ની|ના|ને|થી|માં|પર|નું|ના|ની/g, ' ');
+
+    // Operators (Gujarati + English)
+    t = t
+      .replace(/વત્તા|ઉમેરો|જોડો|પ્લસ|plus/g, '+')
+      .replace(/બાદબાકી|ઘટાડો|ઓછા|કમ|minus/g, '-')
+      .replace(/ગુણાકાર|ગુણો|ઇન્ટુ|ઇન્ટો|times|multiply|into/g, '*')
+      .replace(/ભાગાકાર|ભાગો|થી ભાગો|divide|divided by/g, '/')
+      .replace(/ટકાવારી|ટકા|percent/g, '%')
+      .replace(/વર્ગમૂળ|square root of/g, 'sqrt ')
+      .replace(/ઘાત|power of|to the power/g, '^');
+
+    // Gujarati numbers (basic words)
+    const guNums = {
+      'શૂન્ય':'0','એક':'1','બે':'2','ત્રણ':'3','ચાર':'4','પાંચ':'5','છ':'6','સાત':'7','આઠ':'8','નવ':'9','દસ':'10',
+      'અગિયાર':'11','બાર':'12','તેર':'13','ચૌદ':'14','પંદર':'15','સોળ':'16','સત્તર':'17','અઢાર':'18','ઓગણીસ':'19',
+      'વીસ':'20','ત્રીસ':'30','ચાળીસ':'40','પચાસ':'50','સાઠ':'60','સિત્તેર':'70','એંસી':'80','નેવ્વે':'90','સો':'100'
+    };
+    Object.entries(guNums).forEach(([w,n]) => {
+      t = t.replace(new RegExp(`\\b${w}\\b`, 'g'), n);
     });
 
-    if (SR) {
-      SR.onresult = (event) => {
-        const text = event.results[0][0].transcript;
-        statusEl.textContent = 'Heard: ' + text;
-        const normalized = normalizeVoiceMath(text);
-        if (normalized) {
-          exprEl.value = normalized;
-          updateResult();
-        }
-      };
-      SR.onend = () => {
-        recognizing = false;
-        statusEl.textContent = 'Speech: ready';
-      };
-      SR.onerror = (e) => {
-        recognizing = false;
-        statusEl.textContent = 'Speech error: ' + (e.error || 'unknown');
-      };
-    }
+    // English numbers (basic)
+    const enNums = {
+      zero:'0', one:'1', two:'2', three:'3', four:'4', five:'5', six:'6', seven:'7', eight:'8', nine:'9', ten:'10',
+      eleven:'11', twelve:'12', thirteen:'13', fourteen:'14', fifteen:'15', sixteen:'16', seventeen:'17', eighteen:'18', nineteen:'19',
+      twenty:'20', thirty:'30', forty:'40', fifty:'50', sixty:'60', seventy:'70', eighty:'80', ninety:'90', hundred:'100'
+    };
+    Object.entries(enNums).forEach(([w,n]) => {
+      t = t.replace(new RegExp(`\\b${w}\\b`, 'g'), n);
+    });
 
-    // Initial speak
-    setTimeout(() => speak('કેલ્ક્યુલેટર તૈયાર છે'), 400);
-  </script>
+    // Square root: "sqrt 81" → "Math.sqrt(81)"
+    t = t.replace(/sqrt\s+(\d+(?:\.\d+)?)/g, (_, num) => `Math.sqrt(${num})`);
+
+    // Power: "2 ^ 3" → "Math.pow(2,3)"
+    t = t.replace(/(\d+(?:\.\d+)?)\s*\^\s*(\d+(?:\.\d+)?)/g, (_, a, b) => `Math.pow(${a},${b})`);
+
+    // Percent phrase: "x ટકા y" → "x % y"
+    t = t.replace(/(\d+(?:\.\d+)?)\s*(ટકા|percent)\s*(\d+(?:\.\d+)?)/g, (_, a, _p, b) => `${a} % ${b}`);
+
+    // Finance terms
+    t = t.replace(/વ્યાજ/g, ''); // ignore word "interest"
+    t = t.replace(/લેખે|lekhe|leke/g, '*'); // treat as multiplication
+    t = t.replace(/દર/g, '*'); // rate → multiply
+    // Years: keep number; if "X વર્ષ", multiply by X later via regex
+    // Simple interest: "P ના R ટકા લેખે Y વર્ષ" → P*(R/100)*Y
+    t = t.replace(/(\d+)\s*ના\s*(\d+)\s*ટકા\s*લેખે\s*(\d+)\s*વર્ષ/g,
+      (_, principal, rate, years) => `${principal}*(${rate}/100)*${years}`
+    );
+    // Simple interest without years: assume just P*(R/100)
+    t = t.replace(/(\d+)\s*ના\s*(\d+)\s*ટકા\s*લેખે/g,
+      (_, principal, rate) => `${principal}*(${rate}/100)`
+    );
+
+    // Compound interest phrases
+    t = t.replace(/ચક્રવૃદ્ધિ વ્યાજ|compound interest/g, 'CI');
+    // "P ના R ટકા CI Y વર્ષ" → (P*Math.pow(1+R/100, Y) - P)
+    t = t.replace(/(\d+)\s*ના\s*(\d+)\s*ટકા\s*CI\s*(\d+)\s*વર્ષ/g,
+      (_, principal, rate, years) => `(${principal}*Math.pow((1+${rate}/100),${years})-${principal})`
+    );
+    // Without years: default 1 year
+    t = t.replace(/(\d+)\s*ના\s*(\d+)\s*ટકા\s*CI/g,
+      (_, principal, rate) => `(${principal}*Math.pow((1+${rate}/100),1)-${principal})`
+    );
+
+    // Keep only safe characters
+    t = t.replace(/[^0-9+\-*/().\s%a-zA-Z,_]/g, ' ');
+    // Collapse spaces
+    t = t.replace(/\s+/g, ' ').trim();
+
+    return t;
+  }
+
+  function startListening() {
+    if (!SR) {
+      statusEl.textContent = 'Speech: not supported on this browser';
+      return;
+    }
+    if (recognizing) return;
+    recognizing = true;
+    statusEl.textContent = 'Listening… બોલો: “પાંચ વત્તા બે”, “100000 ના 10 ટકા લેખે 1 વર્ષ”';
+    SR.start();
+  }
+
+  listenBtn.addEventListener('click', () => {
+    if (!SR) { statusEl.textContent = 'Speech: not supported'; return; }
+    if (recognizing) {
+      SR.stop();
+      recognizing = false;
+      statusEl.textContent = 'Speech: stopped';
+    } else {
+      startListening();
+    }
+  });
+
+  if (SR) {
+    SR.onresult = (event) => {
+      const text = event.results[0][0].transcript;
+      statusEl.textContent = 'Heard: ' + text;
+      const normalized = normalizeVoiceMath(text);
+      if (normalized) {
+        exprEl.value = normalized;
+        updateResult();
+      }
+    };
+    SR.onend = () => {
+      recognizing = false;
+      statusEl.textContent = 'Speech: ready';
+    };
+    SR.onerror = (e) => {
+      recognizing = false;
+      statusEl.textContent = 'Speech error: ' + (e.error || 'unknown');
+    };
+  }
+
+  // Initial speak
+  setTimeout(() => speak('કેલ્ક્યુલેટર તૈયાર છે'), 400);
+</script>
 </body>
 </html>
